@@ -1,0 +1,22 @@
+Build.bat
+Build.PL
+ChangeLog
+examples/generate.xy.pl
+examples/pt.pl
+examples/pt.png
+examples/ptf.pl
+examples/ptf.png
+examples/target.jpg
+examples/test.im.pl
+examples/test.im.png
+lib/Image/Magick/PolyText.pm
+lib/Image/Magick/PolyText/FreeType.pm
+Makefile
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+META.yml
+pm_to_blib
+README
+t/pod.t
+t/test.t
