@@ -1,7 +1,7 @@
 package Image::Magick::PolyText;
 {
 use strict;
-use version; our $VERSION = qv('1.0.0');
+use version; our $VERSION = qv('1.0.1');
 use warnings;
 
 use Class::Std;
