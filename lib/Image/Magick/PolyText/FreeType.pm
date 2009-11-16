@@ -2,7 +2,7 @@ package Image::Magick::PolyText::FreeType;
 {
 use base qw( Image::Magick::PolyText );
 use strict;
-use version; our $VERSION = qv('1.0.1');
+use version; our $VERSION = qv('1.0.2');
 use warnings;
 
 use File::Temp;
