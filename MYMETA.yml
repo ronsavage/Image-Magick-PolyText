@@ -1,0 +1,25 @@
+---
+abstract: 'Draw text along a polyline'
+author:
+  - 'Ron Savage <ron@savage.net.au>'
+build_requires:
+  Test::More: 0
+  Test::Pod: 0
+configure_requires:
+  Module::Build: 0.36
+dynamic_config: 0
+generated_by: 'Module::Build version 0.3603'
+license: artistic
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Image-Magick-PolyText
+requires:
+  Carp: 0
+  Image::Magick: 0
+  Math::Bezier: 0
+  Math::Interpolate: 0
+  Readonly: 0
+resources:
+  license: http://opensource.org/licenses/artistic-license.php
+version: v1.0.2
