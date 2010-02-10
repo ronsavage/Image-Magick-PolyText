@@ -14,6 +14,13 @@ meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Image-Magick-PolyText
+provides:
+  Image::Magick::PolyText:
+    file: lib/Image/Magick/PolyText.pm
+    version: v1.0.2
+  Image::Magick::PolyText::FreeType:
+    file: lib/Image/Magick/PolyText/FreeType.pm
+    version: v1.0.2
 requires:
   Carp: 0
   Image::Magick: 0
