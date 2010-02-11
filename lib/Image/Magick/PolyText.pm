@@ -1,13 +1,14 @@
 package Image::Magick::PolyText;
 {
 use strict;
-use version; our $VERSION = qv('1.0.2');
 use warnings;
 
 use Class::Std;
 use Math::Bezier;
 use Math::Interpolate;
 use Readonly;
+
+our $VERSION = '1.0.3';
 
 # ------------------------------------------------
 # Attributes.
@@ -146,7 +147,7 @@ sub dump_font_metrics
 	 11 => 'origin.x',
 	 12 => 'origin.y',
 	);
-	   
+
 	my @metric = $image{$id} -> QueryFontMetrics
 	(
 	pointsize   => $pointsize{$id},

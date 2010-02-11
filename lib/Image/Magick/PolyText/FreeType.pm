@@ -2,13 +2,14 @@ package Image::Magick::PolyText::FreeType;
 {
 use base qw( Image::Magick::PolyText );
 use strict;
-use version; our $VERSION = qv('1.0.2');
 use warnings;
 
 use File::Temp;
 use Font::FreeType;
 use Image::Magick;
 use POSIX qw( ceil );
+
+our $VERSION = '1.0.3';
 
 # ------------------------------------------------
 # Attributes.
@@ -106,7 +107,7 @@ sub glyph2svg2bitmap
 	my $path = $glyph -> svg_path();
 	my $fh   = File::Temp -> new();
 
-	print $fh 
+	print $fh
 	"<?xml version='1.0' encoding='UTF-8'?>\n" .
     "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\"\n" .
     "    \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n\n" .

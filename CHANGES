@@ -1,5 +1,8 @@
 Revision history for Perl extension Image::Magick::PolyText.
 
+1.0.3  Thu Feb 11 17:00:00 2010
+	- Reformat VERSION lines.
+
 1.0.2  Fri Nov 13 13:20:00 2009
 	- Run dos2unix
 	- Rename Changes.txt to CHANGES
