@@ -14,6 +14,7 @@ Module::Build -> new
 	requires =>
 	{
 		Carp              => 0,
+		Class::Std        => 0,
 		Image::Magick     => 0,
 		Math::Bezier      => 0,
 		Math::Interpolate => 0,
