@@ -425,24 +425,6 @@ A typical usage would be $polytext -> highlight_data_points({stroke => 'Black'})
 
 See the file examples/pt.pl in the distro.
 
-=head1 Required Modules
-
-=over 4
-
-=item Class::Std
-
-=item Math::Bezier
-
-=item Math::Interpolate
-
-=item Readonly
-
-=back
-
-=head1 Changes
-
-See the ChangeLog file.
-
 =head1 Author
 
 C<Image::Magick::PolyText> was written by Ron Savage I<E<lt>ron@savage.net.auE<gt>> in 2007.
@@ -451,8 +433,7 @@ Home page: http://savage.net.au/index.html
 
 =head1 Copyright
 
-Australian copyright (c) 2007, Ron Savage. All rights reserved.
-
+Australian copyright (c) 2007, Ron Savage.
 	All Programs of mine are 'OSI Certified Open Source Software';
 	you can redistribute them and/or modify them under the terms of
 	The Artistic License, a copy of which is available at:
