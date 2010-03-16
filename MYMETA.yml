@@ -17,10 +17,10 @@ name: Image-Magick-PolyText
 provides:
   Image::Magick::PolyText:
     file: lib/Image/Magick/PolyText.pm
-    version: v1.0.2
+    version: v1.0.3
   Image::Magick::PolyText::FreeType:
     file: lib/Image/Magick/PolyText/FreeType.pm
-    version: v1.0.2
+    version: v1.0.3
 requires:
   Carp: 0
   Class::Std: 0
@@ -30,4 +30,4 @@ requires:
   Readonly: 0
 resources:
   license: http://opensource.org/licenses/artistic-license.php
-version: v1.0.2
+version: v1.0.3

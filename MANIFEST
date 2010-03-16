@@ -13,7 +13,7 @@ lib/Image/Magick/PolyText.pm
 lib/Image/Magick/PolyText/FreeType.pm
 Makefile.PL
 MANIFEST			This list of files
+META.yml
 README
 t/pod.t
 t/test.t
-META.yml
