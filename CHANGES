@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Magick::PolyText.
 
+1.0.4  Tue Feb 15 16:58:00 2011
+	- Replace /usr/bin/perl with /usr/bin/env perl.
+	- Replace common::sense with use strict and use warnings, to get uninit var warnings.
+
 1.0.3  Thu Feb 11 17:00:00 2010
 	- Reformat VERSION lines.
 	- Add Class::Std to pre-requisites.

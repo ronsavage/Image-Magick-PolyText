@@ -9,7 +9,7 @@ use Font::FreeType;
 use Image::Magick;
 use POSIX qw( ceil );
 
-our $VERSION = '1.0.3';
+our $VERSION = '1.0.4';
 
 # ------------------------------------------------
 # Attributes.
