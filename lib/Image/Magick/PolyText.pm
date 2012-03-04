@@ -230,7 +230,7 @@ sub highlight_data_points
 
 =head1 NAME
 
-C<Image::Magick::PolyText> - Draw text along a polyline
+Image::Magick::PolyText - Draw text along a polyline
 
 =head1 Synopsis
 
