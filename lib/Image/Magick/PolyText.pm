@@ -8,7 +8,7 @@ use Math::Bezier;
 use Math::Interpolate;
 use Readonly;
 
-our $VERSION = '1.0.4';
+our $VERSION = 'v1.0.3';
 
 # ------------------------------------------------
 # Attributes.
