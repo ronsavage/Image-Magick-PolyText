@@ -1,35 +1,77 @@
+use strict;
+use warnings;
+
 use ExtUtils::MakeMaker;
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
-WriteMakefile
+my(%params) =
 (
 	($] ge '5.005') ?
 	(
 		'AUTHOR'   => 'Ron Savage (ron@savage.net.au)',
 		'ABSTRACT' => 'Draw text along a polyline',
     ) : (),
-	clean          =>
+	clean =>
 	{
-		FILES      => 'blib/* Makefile MANIFEST Image-Magick-PolyText-*'
+		FILES => 'blib/* Makefile MANIFEST Image-Magick-PolyText-*'
 	},
-	dist           =>
+	dist =>
 	{
-		COMPRESS   => 'gzip',
-		SUFFIX     => 'gz'
+		COMPRESS	=> 'gzip',
+		SUFFIX		=> 'gz'
 	},
-	DISTNAME       => 'Image-Magick-PolyText',
-	NAME           => 'Image::Magick::PolyText',
-	PL_FILES       => {},
-	PREREQ_PM      =>
+	DISTNAME	=> 'Image-Magick-PolyText',
+	NAME		=> 'Image::Magick::PolyText',
+	PL_FILES	=> {},
+	PREREQ_PM	=>
 	{
-		Carp              => 0,
-		Class::Std        => 0,
-		Image::Magick     => 0,
-		Math::Bezier      => 0,
-		Math::Interpolate => 0,
-		Readonly          => 0,
+		'Carp'				=> 0,
+		'Image::Magick'		=> undef,
+		'Math::Bezier'		=> 0.01,
+		'Math::Interpolate'	=> 1.06,
+		'Moo'				=> 2.003000,
+		'Readonly'			=> 2.05,
+		'strict'			=> 0,
+		'warnings'			=> 0,
+	},
+	TEST_REQUIRES =>
+	{
+		'Test::More'	=> 1.001002,
+		'Test::Pod'		=> 1.51,
 	},
 	VERSION_FROM   => 'lib/Image/Magick/PolyText.pm',
 );
+
+if ( ($ExtUtils::MakeMaker::VERSION =~ /^\d\.\d\d$/) && ($ExtUtils::MakeMaker::VERSION > 6.30) )
+{
+	$params{LICENSE} = 'perl';
+}
+
+if ($ExtUtils::MakeMaker::VERSION ge '6.46')
+{
+	$params{META_MERGE} =
+	{
+		'meta-spec' =>
+		{
+			version => 2,
+		},
+		resources =>
+		{
+			bugtracker =>
+			{
+				web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Image-Magick-PolyText',
+			},
+			license		=> 'http://dev.perl.org/licenses/',
+			repository	=>
+			{
+				type	=> 'git',
+				url		=> 'https://github.com/ronsavage/Image-Magick-PolyText.git',
+				web		=> 'https://github.com/ronsavage/Image-Magick-PolyText',
+			},
+		},
+	};
+}
+
+WriteMakefile(%params);

@@ -1,14 +1,16 @@
 package Image::Magick::PolyText;
-{
+
 use strict;
 use warnings;
 
-use Class::Std;
 use Math::Bezier;
 use Math::Interpolate;
+
+use Moo;
+
 use Readonly;
 
-our $VERSION = 'v1.0.3';
+our $VERSION = '1.04';
 
 # ------------------------------------------------
 # Attributes.
@@ -224,8 +226,6 @@ sub highlight_data_points
 
 # ------------------------------------------------
 
-}	# End of package.
-
 1;
 
 =head1 NAME
@@ -424,6 +424,24 @@ A typical usage would be $polytext -> highlight_data_points({stroke => 'Black'})
 =head1 Example code
 
 See the file examples/pt.pl in the distro.
+
+=head1 Machine-Readable Change Log
+
+The file Changes was converted into Changelog.ini by L<Module::Metadata::Changes>.
+
+=head1 Version Numbers
+
+Version numbers < 1.00 represent development versions. From 1.00 up, they are production versions.
+
+=head1 Repository
+
+L<https://github.com/ronsavage/Image-Magick-PolyText>
+
+=head1 Support
+
+Email the author, or log a bug on RT:
+
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Image-Magick-PolyText>.
 
 =head1 Author
 
