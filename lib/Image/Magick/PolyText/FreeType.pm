@@ -176,7 +176,7 @@ C<Image::Magick::PolyText::FreeType> - Draw text along a polyline using FreeType
 	strokewidth  => 1,
 	text         => 'Draw.text.along.a.polyline', # Can't use spaces!
 	x            => [0, 1, 2, 3, 4],
-	'y'          => [0, 1, 2, 3, 4], # y eq tr so syntax highlighting stuffed without ''.
+	y            => [0, 1, 2, 3, 4],
 	});
 
 	$polytext -> annotate();
@@ -187,7 +187,7 @@ Warning: Experimental code - Do not use.
 
 C<Image::Magick::PolyText::FreeType> is a pure Perl module.
 
-It is a convenient wrapper around C<Image::Magick's Annotate()> method, for drawing text along a polyline.
+It is a convenient wrapper around the C<Image::Magick Annotate()> method, for drawing text along a polyline.
 
 Warning: Experimental code - Do not use.
 
@@ -207,7 +207,7 @@ Warning: Experimental code - Do not use.
 
 new(...) returns an C<Image::Magick::PolyText::FreeType> object.
 
-This is the class's contructor.
+This is the class contructor.
 
 Usage: Image::Magick::PolyText::FreeType -> new({...}).
 
@@ -233,7 +233,7 @@ Takes an C<Image::Magick> color as its value.
 
 The default value is 'Red'.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
@@ -251,7 +251,7 @@ Takes an integer as its value.
 
 The default value is 16.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
@@ -284,7 +284,7 @@ Takes an C<Image::Magick> color as its value.
 
 The default value is 'Red'.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
@@ -294,7 +294,7 @@ Takes an integer as its value.
 
 The default value is 1.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
@@ -305,7 +305,7 @@ Takes a string of characters as its value.
 There is no default value.
 
 This text is split character by character, and each character is drawn with a separate call to
-C<Image::Magick's Annotate()> method. This is a very slow process. You have been warned.
+the C<Image::Magick Annotate()> method. This is a very slow process. You have been warned.
 
 This parameter is mandatory.
 
@@ -341,7 +341,7 @@ This method draws a line through the data points.
 
 The default line color is green.
 
-The options are a hash ref which is passed to C<Image::Magick's Draw()> method, so any option
+The options are a hash ref which is passed to the C<Image::Magick Draw()> method, so any option
 acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> draw({stroke => 'blue'});
@@ -352,7 +352,7 @@ This method draws little (5x5 pixel) rectangles centered on the data points.
 
 The default rectangle color is red.
 
-The options are a hash ref which is passed to C<Image::Magick's Draw()> method, so any option
+The options are a hash ref which is passed to the C<Image::Magick Draw()> method, so any option
 acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> highlight_data_points({stroke => 'black'});

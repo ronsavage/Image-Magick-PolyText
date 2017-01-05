@@ -10,22 +10,97 @@ use Moo;
 
 use Readonly;
 
+use Types::Standard qw/Any Bool Int Num Str/;
+
+has debug =>
+(
+	default  => sub{return 0},
+	is       => 'rw',
+	isa      => Bool,
+	required => 0,
+);
+
+has fill =>
+(
+	default  => sub{return 'Red'},
+	is       => 'rw',
+	isa      => Any,
+	required => 0,
+);
+
+has image =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Any,
+	required => 1,
+);
+
+has pointsize =>
+(
+	default  => sub{return 16},
+	is       => 'rw',
+	isa      => Init,
+	required => 0,
+);
+
+has rotate =>
+(
+	default  => sub{return 1},
+	is       => 'rw',
+	isa      => Bool,
+	required => 0,
+);
+
+has slide =>
+(
+	default  => sub{return 0},
+	is       => 'rw',
+	isa      => Num,
+	required => 0,
+);
+
+has stroke =>
+(
+	default  => sub{return 'Red'},
+	is       => 'rw',
+	isa      => Any,
+	required => 0,
+);
+
+has strokewidth =>
+(
+	default  => sub{return 1},
+	is       => 'rw',
+	isa      => Int,
+	required => 0,
+);
+
+has text =>
+(
+	default  => sub{return 'text'},
+	is       => 'rw',
+	isa      => Str,
+	required => 1,
+);
+
+has x =>
+(
+	default  => sub{return []},
+	is       => 'rw',
+	isa      => ArrayRef,
+	required => 1,
+);
+
+has y =>
+(
+	default  => sub{return []},
+	is       => 'rw',
+	isa      => ArrayRef,
+	required => 1,
+);
+
 our $VERSION = '1.04';
-
-# ------------------------------------------------
-# Attributes.
-
-my %debug        : ATTR(init_arg => 'debug',        default => 0);
-my %fill         : ATTR(init_arg => 'fill',         default => 'Red');
-my %image        : ATTR(init_arg => 'image');
-my %pointsize    : ATTR(init_arg => 'pointsize',    default => 16);
-my %rotate       : ATTR(init_arg => 'rotate',       default => 1);
-my %slide        : ATTR(init_arg => 'slide',        default => 0);
-my %stroke       : ATTR(init_arg => 'stroke',       default => 'Red');
-my %strokewidth  : ATTR(init_arg => 'strokewidth',  default => 1);
-my %text         : ATTR(init_arg => 'text');
-my %x            : ATTR(init_arg => 'x');
-my %y            : ATTR(init_arg => 'y');
 
 # ------------------------------------------------
 # Constants.
@@ -38,12 +113,8 @@ Readonly::Scalar my $pi => 3.14159265;
 sub annotate
 {
 	my $self = shift @_;
-	my $id   = ident $self;
 
-	if ($debug{$id})
-	{
-		$self -> dump();
-	}
+	$self -> dump if ($self -> debug);
 
 	my $i;
 	my $result;
@@ -66,14 +137,14 @@ sub annotate
 		$y        = $value[0];
 		$result   = $image{$id} -> Annotate
 		(
-		fill        => $fill{$id},
-		pointsize   => $pointsize{$id},
-		rotate      => $rotation,
-		stroke      => $stroke{$id},
-		strokewidth => $strokewidth{$id},
-		text        => $text[$i],
-		x           => $x,
-		'y'         => $y, # y eq tr, so syntax highlighting stuffed without ''.
+			fill        => $fill{$id},
+			pointsize   => $pointsize{$id},
+			rotate      => $rotation,
+			stroke      => $stroke{$id},
+			strokewidth => $strokewidth{$id},
+			text        => $text[$i],
+			x           => $x,
+			'y'         => $y, # y eq tr, so syntax highlighting stuffed without ''.
 		);
 
 		die $result if $result;
@@ -85,11 +156,10 @@ sub annotate
 
 # ------------------------------------------------
 
-sub draw : CUMULATIVE
+sub draw
 {
 	my $self = shift @_;
 	my $arg  = shift @_;
-	my $id   = ident $self;
 
 	my $i;
 	my $s = '';
@@ -121,9 +191,8 @@ sub dump
 {
 	my $self = shift @_;
 
-	print $self -> _DUMP();
-	$self -> dump_font_metrics();
-	$self -> highlight_data_points();
+	$self -> dump_font_metrics;
+	$self -> highlight_data_points;
 
 }	# End of dump.
 
@@ -132,29 +201,28 @@ sub dump
 sub dump_font_metrics
 {
 	my $self        = shift @_;
-	my $id          = ident $self;
 	my %metric_name =
 	(
-	 0  => 'character width',
-	 1  => 'character height',
-	 2  => 'ascender',
-	 3  => 'descender',
-	 4  => 'text width',
-	 5  => 'text height',
-	 6  => 'maximum horizontal advance',
-	 7  => 'bounds.x1',
-	 8  => 'bounds.y1',
-	 9  => 'bounds.x2',
-	 10 => 'bounds.y2',
-	 11 => 'origin.x',
-	 12 => 'origin.y',
+		 0  => 'character width',
+		 1  => 'character height',
+		 2  => 'ascender',
+		 3  => 'descender',
+		 4  => 'text width',
+		 5  => 'text height',
+		 6  => 'maximum horizontal advance',
+		 7  => 'bounds.x1',
+		 8  => 'bounds.y1',
+		 9  => 'bounds.x2',
+		10 => 'bounds.y2',
+		11 => 'origin.x',
+		12 => 'origin.y',
 	);
 
 	my @metric = $image{$id} -> QueryFontMetrics
 	(
-	pointsize   => $pointsize{$id},
-	strokewidth => $strokewidth{$id},
-	text        => 'W',
+		pointsize   => $pointsize{$id},
+		strokewidth => $strokewidth{$id},
+		text        => 'W',
 	);
 
 	print map{"$metric_name{$_}: $metric[$_]. \n"} 0 .. $#metric;
@@ -175,11 +243,11 @@ sub dump_font_metrics
 		$right_y = $y{$id}[$i] + $metric[10];
 		$result  = $image{$id} -> Draw
 		(
-		fill        => 'None',
-		points      => "$left_x,$left_y $right_x,$right_y",
-		primitive   => 'rectangle',
-		stroke      => 'Blue',
-		strokewidth => 1,
+			fill        => 'None',
+			points      => "$left_x,$left_y $right_x,$right_y",
+			primitive   => 'rectangle',
+			stroke      => 'Blue',
+			strokewidth => 1,
 		);
 
 		die $result if $result;
@@ -193,7 +261,6 @@ sub highlight_data_points
 {
 	my $self   = shift @_;
 	my $arg    = shift @_;
-	my $id     = ident $self;
 	my %option =
 	(
 		fill        => 'None',
@@ -236,26 +303,26 @@ Image::Magick::PolyText - Draw text along a polyline
 
 	my $polytext = Image::Magick::PolyText -> new
 	({
-	debug        => 0,
-	fill         => 'Red',
-	image        => $image,
-	pointsize    => 16,
-	rotate       => 1,
-	slide        => 0.1,
-	stroke       => 'Red',
-	strokewidth  => 1,
-	text         => 'Draw text along a polyline',
-	x            => [0, 1, 2, 3, 4],
-	'y'          => [0, 1, 2, 3, 4], # y eq tr so emacs' syntax highlighting is stuffed without ''.
+		debug        => 0,
+		fill         => 'Red',
+		image        => $image,
+		pointsize    => 16,
+		rotate       => 1,
+		slide        => 0.1,
+		stroke       => 'Red',
+		strokewidth  => 1,
+		text         => 'Draw text along a polyline',
+		x            => [0, 1, 2, 3, 4],
+		y            => [0, 1, 2, 3, 4],
 	});
 
-	$polytext -> annotate();
+	$polytext -> annotate;
 
 =head1 Description
 
 C<Image::Magick::PolyText> is a pure Perl module.
 
-It is a convenient wrapper around C<Image::Magick's Annotate()> method, for drawing text along a polyline.
+It is a convenient wrapper around the C<Image::Magick Annotate()> method, for drawing text along a polyline.
 
 =head1 Distributions
 
@@ -271,7 +338,7 @@ help on unpacking and installing each type of distro.
 
 new(...) returns an C<Image::Magick::PolyText> object.
 
-This is the class's contructor.
+This is the class contructor.
 
 Usage: Image::Magick::PolyText -> new({...}).
 
@@ -281,7 +348,7 @@ For each parameter you wish to use, call new as new({param_1 => value_1, ...}).
 
 =over 4
 
-=item debug
+=item o debug
 
 Takes either 0 or 1 as its value.
 
@@ -291,17 +358,17 @@ When set to 1, the module writes to STDOUT, and plots various stuff on your imag
 
 This parameter is optional.
 
-=item fill
+=item o fill
 
 Takes an C<Image::Magick> color as its value.
 
 The default value is 'Red'.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item image
+=item o image
 
 Takes an C<Image::Magick> object as its value.
 
@@ -309,17 +376,17 @@ There is no default value.
 
 This parameter is mandatory.
 
-=item pointsize
+=item o pointsize
 
 Takes an integer as its value.
 
 The default value is 16.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item rotate
+=item o rotate
 
 Takes either 0 or 1 as its value.
 
@@ -332,7 +399,7 @@ at the 'current' (x, y) position.
 
 This parameter is optional.
 
-=item slide
+=item o slide
 
 Takes a real number in the range 0.0 to 1.0 as its value.
 
@@ -342,40 +409,40 @@ The value represents how far along the polyline (0.0 = 0%, 1.0 = 100%) to slide 
 
 The parameter is optional.
 
-=item stroke
+=item o stroke
 
 Takes an C<Image::Magick> color as its value.
 
 The default value is 'Red'.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item strokewidth
+=item o strokewidth
 
 Takes an integer as its value.
 
 The default value is 1.
 
-The value is passed to C<Image::Magick's Annotate()> method.
+The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item text
+=item o text
 
 Takes a string of characters as its value.
 
 There is no default value.
 
 This text is split character by character, and each character is drawn with a separate call to
-C<Image::Magick's Annotate()> method. This is a very slow process. You have been warned.
+the C<Image::Magick Annotate()> method. This is a very slow process. You have been warned.
 
 This parameter is mandatory.
 
-=item x
+=item o x
 
-Takes an array ref of x (co-ordinate) values as its value.
+Takes an arrayref of x (co-ordinate) values as its value.
 
 There is no default value.
 
@@ -383,9 +450,9 @@ These co-ordinates are the x-axis values of the known points along the polyline.
 
 This parameter is mandatory.
 
-=item y
+=item o y
 
-Takes an array ref of y (abcissa) values as its value.
+Takes an arrayref of y (abcissa) values as its value.
 
 There is no default value.
 
@@ -395,28 +462,30 @@ This parameter is mandatory.
 
 =back
 
-=head1 Method: annotate()
+=head1 Methods
+
+=head2 annotate()
 
 This method writes the text on to your image.
 
-=head1 Method: draw({options})
+=head2 draw({options})
 
 This method draws straight lines from data point to data point.
 
 The default line color is Green.
 
-The options are a hash ref which is passed to C<Image::Magick's Draw()> method, so any option
+The options are a hash ref which is passed to the C<Image::Magick Draw()> method, so any option
 acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> draw({stroke => 'Blue'});
 
-=head1 Method: highlight_data_points({options})
+=head2 highlight_data_points({options})
 
 This method draws little (5x5 pixel) rectangles centered on the data points.
 
 The default rectangle color is Red.
 
-The options are a hash ref which is passed to C<Image::Magick's Draw()> method, so any option
+The options are a hash ref which is passed to the C<Image::Magick Draw()> method, so any option
 acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> highlight_data_points({stroke => 'Black'});
