@@ -28,6 +28,7 @@ my(%params) =
 	PREREQ_PM	=>
 	{
 		'Carp'				=> 0,
+		'File::Temp'		=> 0,
 		'Font::FreeType'	=> 0.07,
 		'Image::Magick'		=> undef,
 		'List::Maker'		=> 0.005,
@@ -35,9 +36,11 @@ my(%params) =
 		'Math::Derivative'	=> 0.04,
 		'Math::Interpolate'	=> 1.06,
 		'Moo'				=> 2.003000,
+		'parent'			=> 0,
 		'POSIX'				=> 0,
 		'Readonly'			=> 2.05,
 		'strict'			=> 0,
+		'Types::Standard'	=> 1.000005,
 		'Time::Elapsed'		=> 0.32,
 		'warnings'			=> 0,
 	},
