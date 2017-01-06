@@ -35,13 +35,6 @@ $writer -> draw(stroke => 'red');
 $writer -> highlight_data_points(stroke => 'black');
 $writer -> annotate;
 
-my($output_file_name) = 'test.png';
-
-$result = $image -> Write($output_file_name);
-
-die $result if $result;
-
-note "Wrote $output_file_name";
 note "Image depth: @{[$image -> get('depth')]} bits per pixel";
 
 done_testing();
