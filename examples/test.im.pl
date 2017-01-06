@@ -4,19 +4,19 @@ use strict;
 use warnings;
 
 use Image::Magick;
+
 use List::Maker;
-use Math::Derivative qw(Derivative1);
+
+use Math::Derivative 'Derivative1';
+
 use Readonly;
+
 use Time::Elapsed qw(elapsed);
 
 # ------------------------------------------------
-# Set up
-# ------
-print "Image::Magick V $Image::Magick::VERSION. \n";
-print "\n";
 
 Readonly::Scalar my $pi			=> 3.14159;
-Readonly::Scalar my $start_time => time();
+Readonly::Scalar my $start_time => time;
 my($image)						= Image::Magick -> new(size => '800 x 400');
 my($result)						= $image -> Read('xc:white');
 

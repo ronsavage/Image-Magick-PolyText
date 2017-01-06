@@ -17,21 +17,6 @@ use POSIX 'ceil';
 our $VERSION = '1.04';
 
 # ------------------------------------------------
-# Attributes.
-
-my %debug        : ATTR(init_arg => 'debug',        default => 0);
-my %fill         : ATTR(init_arg => 'fill',         default => 'Red');
-my %image        : ATTR(init_arg => 'image');
-my %pointsize    : ATTR(init_arg => 'pointsize',    default => 16);
-my %rotate       : ATTR(init_arg => 'rotate',       default => 1);
-my %slide        : ATTR(init_arg => 'slide',        default => 0);
-my %stroke       : ATTR(init_arg => 'stroke',       default => 'Red');
-my %strokewidth  : ATTR(init_arg => 'strokewidth',  default => 1);
-my %text         : ATTR(init_arg => 'text');
-my %x            : ATTR(init_arg => 'x');
-my %y            : ATTR(init_arg => 'y');
-
-# ------------------------------------------------
 # Constants.
 
 Readonly::Scalar my $pi => 3.14159265;
@@ -41,42 +26,35 @@ Readonly::Scalar my $pi => 3.14159265;
 
 sub annotate
 {
-	my $self = shift @_;
-	my $id   = ident $self;
-	my $font = $image{$id} -> Get('font');
+	my($self)	= shift @_;
+	my($font)	= $self -> image -> Get('font');
+	my($face)	= Font::FreeType -> new ->face($font, load_flags => FT_LOAD_NO_HINTING);
 
-	print "Font: $font. \n";
+	$face -> set_char_size($self -> pointsize, 0, 72, 72);
 
-	my $face = Font::FreeType -> new() ->face($font, load_flags => FT_LOAD_NO_HINTING);
-
-	$face -> set_char_size($pointsize{$id}, 0, 72, 72);
-
-	if ($debug{$id})
-	{
-		$self -> dump();
-	}
+	$self -> dump if ($self -> debug);
 
 	my $bitmap;
 	my $i;
 	my $result;
 	my $rotation;
-	my @text = split //, $text{$id};
+	my @text = split //, $self -> text;
 	my @value;
-	my $x = $x{$id}[0];
+	my $x = ${$self -> x}[0];
 	my $y;
 
-	if ($slide{$id})
+	if ($self -> slide)
 	{
-		my $b    = Math::Bezier -> new(map{($x{$id}[$_], $y{$id}[$_])} 0 .. $#{$x{$id} });
-		($x, $y) = $b -> point($slide{$id});
+		my $b    = Math::Bezier -> new(map{(${$self -> x}[$_], ${$self -> y}[$_])} 0 .. $#{$self -> x});
+		($x, $y) = $b -> point($self -> slide);
 	}
 
 	for ($i = 0; $i <= $#text; $i++)
 	{
-		@value    = Math::Interpolate::robust_interpolate($x, $x{$id}, $y{$id});
-		$rotation = $rotate{$id} ? 180 * $value[1] / $pi : 0; # Convert radians to degrees.
+		@value    = Math::Interpolate::robust_interpolate($x, $self -> x, $self -> y);
+		$rotation = $self -> rotate ? 180 * $value[1] / $pi : 0; # Convert radians to degrees.
 		$y        = $value[0];
-		$result   = $image{$id} -> Composite
+		$result   = $self -> image -> Composite
 		(
 		compose => 'Over',
 		image   => $self -> glyph2svg2bitmap($face, $text[$i], $rotation),
@@ -86,7 +64,7 @@ sub annotate
 
 		die $result if $result;
 
-		$x += $pointsize{$id};
+		$x += $self -> pointsize;
 	}
 
 }	# End of annotate.
@@ -95,22 +73,19 @@ sub annotate
 
 sub glyph2svg2bitmap
 {
-	my $self     = shift @_;
-	my $face     = shift @_;
-	my $char     = shift @_;
-	my $rotation = shift @_;
-	my $glyph    = $face -> glyph_from_char_code(ord $char);
+	my($self, $face, $char, $rotation)	= @_;
+	my($glyph)							= $face -> glyph_from_char_code(ord $char);
 
 	if (! (defined $glyph && $glyph -> has_outline() ) )
 	{
 		$glyph = $face -> glyph_from_char_code('?');
 	}
 
-	my ($xmin, $ymin, $xmax, $ymax) = $glyph -> outline_bbox();
+	my($xmin, $ymin, $xmax, $ymax) = $glyph -> outline_bbox;
 	$xmax    = ceil $xmax;
 	$ymax    = ceil $ymax;
-	my $path = $glyph -> svg_path();
-	my $fh   = File::Temp -> new();
+	my $path = $glyph -> svg_path;
+	my $fh   = File::Temp -> new;
 
 	print $fh
 	"<?xml version='1.0' encoding='UTF-8'?>\n" .
@@ -127,7 +102,7 @@ sub glyph2svg2bitmap
     "</svg>\n";
 	close $fh;
 
-	my $bitmap = Image::Magick -> new();
+	my $bitmap = Image::Magick -> new;
 	my $result  = $bitmap -> Read($fh -> filename() );
 
 	die $result if $result;
@@ -179,7 +154,7 @@ C<Image::Magick::PolyText::FreeType> - Draw text along a polyline using FreeType
 	y            => [0, 1, 2, 3, 4],
 	});
 
-	$polytext -> annotate();
+	$polytext -> annotate;
 
 Warning: Experimental code - Do not use.
 

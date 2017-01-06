@@ -10,7 +10,7 @@ use Moo;
 
 use Readonly;
 
-use Types::Standard qw/Any Bool Int Num Str/;
+use Types::Standard qw/Any ArrayRef Bool Int Num Str/;
 
 has debug =>
 (
@@ -40,7 +40,7 @@ has pointsize =>
 (
 	default  => sub{return 16},
 	is       => 'rw',
-	isa      => Init,
+	isa      => Int,
 	required => 0,
 );
 
@@ -112,36 +112,36 @@ Readonly::Scalar my $pi => 3.14159265;
 
 sub annotate
 {
-	my $self = shift @_;
+	my($self) = @_;
 
 	$self -> dump if ($self -> debug);
 
 	my $i;
 	my $result;
 	my $rotation;
-	my @text = split //, $text{$id};
+	my @text = split //, $self -> text;
 	my @value;
-	my $x = $x{$id}[0];
+	my $x = ${$self -> x}[0];
 	my $y;
 
-	if ($slide{$id})
+	if ($self -> slide)
 	{
-		my $b    = Math::Bezier -> new(map{($x{$id}[$_], $y{$id}[$_])} 0 .. $#{$x{$id} });
-		($x, $y) = $b -> point($slide{$id});
+		my $b    = Math::Bezier -> new(map{(${$self -> x}[$_], ${$self -> y}[$_])} 0 .. $#{$self -> x});
+		($x, $y) = $b -> point($self -> slide);
 	}
 
 	for ($i = 0; $i <= $#text; $i++)
 	{
-		@value    = Math::Interpolate::robust_interpolate($x, $x{$id}, $y{$id});
-		$rotation = $rotate{$id} ? 180 * $value[1] / $pi : 0; # Convert radians to degrees.
+		@value    = Math::Interpolate::robust_interpolate($x, $self -> x, $self -> y);
+		$rotation = $self -> rotate ? 180 * $value[1] / $pi : 0; # Convert radians to degrees.
 		$y        = $value[0];
-		$result   = $image{$id} -> Annotate
+		$result   = $self -> image -> Annotate
 		(
-			fill        => $fill{$id},
-			pointsize   => $pointsize{$id},
+			fill        => $self -> fill,
+			pointsize   => $self -> pointsize,
 			rotate      => $rotation,
-			stroke      => $stroke{$id},
-			strokewidth => $strokewidth{$id},
+			stroke      => $self -> stroke,
+			strokewidth => $self -> strokewidth,
 			text        => $text[$i],
 			x           => $x,
 			'y'         => $y, # y eq tr, so syntax highlighting stuffed without ''.
@@ -149,7 +149,7 @@ sub annotate
 
 		die $result if $result;
 
-		$x += $pointsize{$id};
+		$x += $self -> pointsize;
 	}
 
 }	# End of annotate.
@@ -158,15 +158,14 @@ sub annotate
 
 sub draw
 {
-	my $self = shift @_;
-	my $arg  = shift @_;
+	my($self, %arg) = @_;
 
 	my $i;
 	my $s = '';
 
-	for $i (0 .. $#{$x{$id} })
+	for $i (0 .. $#{$self -> x})
 	{
-		$s .= "$x{$id}[$i],$y{$id}[$i] ";
+		$s .= "${$self -> x}[$i],${$self -> y}[$i] ";
 	}
 
 	my %option =
@@ -176,10 +175,10 @@ sub draw
 		primitive   => 'polyline',
 		stroke      => 'Green',
 		strokewidth => 1,
-		map{(lc $_, $$arg{$_})} keys %$arg,
+		map{(lc $_, $arg{$_})} keys %arg,
 	);
 
-	my $result = $image{$id} -> Draw(%option);
+	my $result = $self -> image -> Draw(%option);
 
 	die $result if $result;
 
@@ -189,7 +188,7 @@ sub draw
 
 sub dump
 {
-	my $self = shift @_;
+	my($self) = @_;
 
 	$self -> dump_font_metrics;
 	$self -> highlight_data_points;
@@ -200,8 +199,8 @@ sub dump
 
 sub dump_font_metrics
 {
-	my $self        = shift @_;
-	my %metric_name =
+	my($self)			= @_;
+	my(%metric_name)	=
 	(
 		 0  => 'character width',
 		 1  => 'character height',
@@ -218,10 +217,10 @@ sub dump_font_metrics
 		12 => 'origin.y',
 	);
 
-	my @metric = $image{$id} -> QueryFontMetrics
+	my @metric = $self -> image -> QueryFontMetrics
 	(
-		pointsize   => $pointsize{$id},
-		strokewidth => $strokewidth{$id},
+		pointsize   => $self -> pointsize,
+		strokewidth => $self -> strokewidth,
 		text        => 'W',
 	);
 
@@ -235,13 +234,13 @@ sub dump_font_metrics
 	my $right_x;
 	my $right_y;
 
-	for ($i = 0; $i <= $#{$x{$id} }; $i++)
+	for ($i = 0; $i <= $#{$self -> x}; $i++)
 	{
-		$left_x  = $x{$id}[$i] - $metric[7];
-		$left_y  = $y{$id}[$i] - $metric[8];
-		$right_x = $x{$id}[$i] + $metric[9];
-		$right_y = $y{$id}[$i] + $metric[10];
-		$result  = $image{$id} -> Draw
+		$left_x  = ${$self -> x}[$i] - $metric[7];
+		$left_y  = ${$self -> y}[$i] - $metric[8];
+		$right_x = ${$self -> x}[$i] + $metric[9];
+		$right_y = ${$self -> y}[$i] + $metric[10];
+		$result  = $self -> image -> Draw
 		(
 			fill        => 'None',
 			points      => "$left_x,$left_y $right_x,$right_y",
@@ -259,15 +258,14 @@ sub dump_font_metrics
 
 sub highlight_data_points
 {
-	my $self   = shift @_;
-	my $arg    = shift @_;
-	my %option =
+	my($self, %arg)	= @_;
+	my(%option)		=
 	(
 		fill        => 'None',
 		primitive   => 'rectangle',
 		stroke      => 'Red',
 		strokewidth => 1,
-		map{(lc $_, $$arg{$_})} keys %$arg,
+		map{(lc $_, $arg{$_})} keys %arg,
 	);
 
 	my $i;
@@ -277,14 +275,14 @@ sub highlight_data_points
 	my $right_x;
 	my $right_y;
 
-	for ($i = 0; $i <= $#{$x{$id} }; $i++)
+	for ($i = 0; $i <= $#{$self -> x}; $i++)
 	{
-		$left_x           = $x{$id}[$i] - 2;
-		$left_y           = $y{$id}[$i] - 2;
-		$right_x          = $x{$id}[$i] + 2;
-		$right_y          = $y{$id}[$i] + 2;
+		$left_x           = ${$self -> x}[$i] - 2;
+		$left_y           = ${$self -> y}[$i] - 2;
+		$right_x          = ${$self -> x}[$i] + 2;
+		$right_y          = ${$self -> y}[$i] + 2;
 		$option{'points'} = "$left_x,$left_y $right_x,$right_y";
-		$result           = $image{$id} -> Draw(%option);
+		$result           = $self -> image -> Draw(%option);
 
 		die $result if $result;
 	}
@@ -302,7 +300,7 @@ Image::Magick::PolyText - Draw text along a polyline
 =head1 Synopsis
 
 	my $polytext = Image::Magick::PolyText -> new
-	({
+	(
 		debug        => 0,
 		fill         => 'Red',
 		image        => $image,
@@ -314,7 +312,7 @@ Image::Magick::PolyText - Draw text along a polyline
 		text         => 'Draw text along a polyline',
 		x            => [0, 1, 2, 3, 4],
 		y            => [0, 1, 2, 3, 4],
-	});
+	);
 
 	$polytext -> annotate;
 
