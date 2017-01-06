@@ -14,7 +14,7 @@ use Moo;
 
 use POSIX 'ceil';
 
-our $VERSION = '1.04';
+our $VERSION = '2.00';
 
 # ------------------------------------------------
 # Constants.
@@ -26,7 +26,7 @@ Readonly::Scalar my $pi => 3.14159265;
 
 sub annotate
 {
-	my($self)	= shift @_;
+	my($self)	= @_;
 	my($font)	= $self -> image -> Get('font');
 	my($face)	= Font::FreeType -> new ->face($font, load_flags => FT_LOAD_NO_HINTING);
 
@@ -141,17 +141,17 @@ C<Image::Magick::PolyText::FreeType> - Draw text along a polyline using FreeType
 
 	my $polytext = Image::Magick::PolyText::FreeType -> new
 	({
-	debug        => 0,
-	fill         => 'Red',
-	image        => $image,
-	pointsize    => 16,
-	rotate       => 1,
-	slide        => 0.1,
-	stroke       => 'Red',
-	strokewidth  => 1,
-	text         => 'Draw.text.along.a.polyline', # Can't use spaces!
-	x            => [0, 1, 2, 3, 4],
-	y            => [0, 1, 2, 3, 4],
+		debug        => 0,
+		fill         => 'Red',
+		image        => $image,
+		pointsize    => 16,
+		rotate       => 1,
+		slide        => 0.1,
+		stroke       => 'Red',
+		strokewidth  => 1,
+		text         => 'Draw.text.along.a.polyline', # Can't use spaces!
+		x            => [0, 1, 2, 3, 4],
+		y            => [0, 1, 2, 3, 4],
 	});
 
 	$polytext -> annotate;
@@ -192,7 +192,7 @@ For each parameter you wish to use, call new as new({param_1 => value_1, ...}).
 
 =over 4
 
-=item debug
+=item o debug
 
 Takes either 0 or 1 as its value.
 
@@ -202,7 +202,7 @@ When set to 1, the module writes to STDOUT, and plots various stuff on your imag
 
 This parameter is optional.
 
-=item fill
+=item o fill
 
 Takes an C<Image::Magick> color as its value.
 
@@ -212,7 +212,7 @@ The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item image
+=item o image
 
 Takes an C<Image::Magick> object as its value.
 
@@ -220,7 +220,7 @@ There is no default value.
 
 This parameter is mandatory.
 
-=item pointsize
+=item vpointsize
 
 Takes an integer as its value.
 
@@ -230,7 +230,7 @@ The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item rotate
+=item vrotate
 
 Takes either 0 or 1 as its value.
 
@@ -243,7 +243,7 @@ at the 'current' (x, y) position.
 
 This parameter is optional.
 
-=item slide
+=item o slide
 
 Takes a real number in the range 0.0 to 1.0 as its value.
 
@@ -253,7 +253,7 @@ The value represents how far along the polyline (0.0 = 0%, 1.0 = 100%) to slide 
 
 The parameter is optional.
 
-=item stroke
+=item o stroke
 
 Takes an C<Image::Magick> color as its value.
 
@@ -263,7 +263,7 @@ The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item strokewidth
+=item o strokewidth
 
 Takes an integer as its value.
 
@@ -273,7 +273,7 @@ The value is passed to the C<Image::Magick Annotate()> method.
 
 This parameter is optional.
 
-=item text
+=item o text
 
 Takes a string of characters as its value.
 
@@ -284,7 +284,7 @@ the C<Image::Magick Annotate()> method. This is a very slow process. You have be
 
 This parameter is mandatory.
 
-=item x
+=item o x
 
 Takes an array ref of x (co-ordinate) values as its value.
 
@@ -294,7 +294,7 @@ These co-ordinates are the x-axis values of the polyline.
 
 This parameter is mandatory.
 
-=item y
+=item o y
 
 Takes an array ref of y (abcissa) values as its value.
 
@@ -306,11 +306,15 @@ This parameter is mandatory.
 
 =back
 
-=head1 Method: annotate()
+=head1
+
+=head2 annotate()
 
 This method writes the text on to your image.
 
-=head1 Method: draw({options})
+=head2 draw(%options)
+
+%options is an optional hash of (key => value) pairs.
 
 This method draws a line through the data points.
 
@@ -321,7 +325,9 @@ acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> draw({stroke => 'blue'});
 
-=head1 Method: highlight_data_points({options})
+=head2 highlight_data_points(%options)
+
+%options is an optional hash of (key => value) pairs.
 
 This method draws little (5x5 pixel) rectangles centered on the data points.
 
@@ -365,7 +371,7 @@ Home page: http://savage.net.au/index.html
 Australian copyright (c) 2007, Ron Savage.
 	All Programs of mine are 'OSI Certified Open Source Software';
 	you can redistribute them and/or modify them under the terms of
-	The Artistic License, a copy of which is available at:
-	http://www.opensource.org/licenses/index.html
+	The Perl License, a copy of which is available at:
+	http://dev.perl.org/licenses/
 
 =cut

@@ -100,7 +100,7 @@ has y =>
 	required => 1,
 );
 
-our $VERSION = '1.04';
+our $VERSION = '2.00';
 
 # ------------------------------------------------
 # Constants.
@@ -466,7 +466,9 @@ This parameter is mandatory.
 
 This method writes the text on to your image.
 
-=head2 draw({options})
+=head2 draw(%options)
+
+%options is an optional hash of (key => value) pairs.
 
 This method draws straight lines from data point to data point.
 
@@ -477,7 +479,9 @@ acceptable to C<Draw()> is acceptable here.
 
 A typical usage would be $polytext -> draw({stroke => 'Blue'});
 
-=head2 highlight_data_points({options})
+=head2 highlight_data_points(%options)
+
+%options is an optional hash of (key => value) pairs.
 
 This method draws little (5x5 pixel) rectangles centered on the data points.
 
@@ -521,7 +525,7 @@ Home page: http://savage.net.au/index.html
 Australian copyright (c) 2007, Ron Savage.
 	All Programs of mine are 'OSI Certified Open Source Software';
 	you can redistribute them and/or modify them under the terms of
-	The Artistic License, a copy of which is available at:
-	http://www.opensource.org/licenses/index.html
+	The Perl License, a copy of which is available at:
+	http://dev.perl.org/licenses/
 
 =cut
