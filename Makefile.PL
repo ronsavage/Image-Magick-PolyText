@@ -27,7 +27,6 @@ my(%params) =
 	PL_FILES	=> {},
 	PREREQ_PM	=>
 	{
-		'Carp'				=> 0,
 		'File::Temp'		=> 0,
 		'Font::FreeType'	=> 0.07,
 		'Image::Magick'		=> undef,
